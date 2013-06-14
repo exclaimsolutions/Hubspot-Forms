@@ -1,7 +1,7 @@
 $(".hubspot_forms_dropdown").chosen();
 
 $(".hubspot_forms_refresh").on("click", function(){
-	$.get("<?php echo html_entity_decode($action_url) ?>", function(data) {
+	var request = $.get("<?php echo html_entity_decode($action_url) ?>", function(data) {
 		var $dropdowns = $(".hubspot_forms_dropdown");
 
 		$dropdowns.children().slice(1).remove();
@@ -24,4 +24,15 @@ $(".hubspot_forms_refresh").on("click", function(){
 			$.ee_notice(data.error, {type: "error"});
 		}
 	}, "json");
+
+	// Handle Server Errors
+	request.fail(function(data) {
+		if (data.responseText) {
+			var response = $.parseJSON(data.responseText);
+
+			$.ee_notice(response.error, {type: "error"});
+		} else {
+			$.ee_notice(data.statusText, {type: "error"});
+		}
+	})
 });
