@@ -50,8 +50,8 @@ class Hubspot_forms_upd {
 		ee()->db->insert('modules', $mod_data);
 
 		$action = array(
-			'class'     => 'Hubspot_forms',
-			'method'    => 'refresh_forms'
+			'class'  => 'Hubspot_forms_mcp',
+			'method' => 'refresh_forms'
 		);
 
 		ee()->db->insert('actions', $action);
@@ -108,6 +108,7 @@ class Hubspot_forms_upd {
 			->delete('modules');
 
 		ee()->db->where('class', 'Hubspot_forms')
+			->or_where('class', 'Hubspot_forms_mcp')
 			->delete('actions');
 
 		ee()->load->dbforge();
@@ -127,9 +128,43 @@ class Hubspot_forms_upd {
 	 */
 	public function update($current = '')
 	{
-		// If you have updates, drop 'em in here.
+		/**
+		 * Are we already on the current version?
+		 */
+		if ($current == '' OR version_compare($current, HUBSPOT_FORMS_VERSION) === 0)
+		{
+			return FALSE;
+		}
+
+		/**
+		 * Update to 1.0.1
+		 */
+		if (version_compare($current, '1.0.1', '<'))
+		{
+			$this->v101();
+		}
+
 		return TRUE;
 	}
+
+	// ------------------------------------------------------------------------
+
+	public function v101()
+	{
+		$old_action = array(
+			'class'  => 'Hubspot_forms',
+			'method' => 'refresh_forms'
+		);
+
+		$new_action = array(
+			'class'  => 'Hubspot_forms_mcp',
+			'method' => 'refresh_forms'
+		);
+
+		ee()->db->where($old_action)
+			->update('actions', $new_action);
+	}
+
 
 }
 /* End of file upd.hubspot_forms.php */

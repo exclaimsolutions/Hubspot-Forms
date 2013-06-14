@@ -45,9 +45,13 @@ class Hubspot_forms_mcp {
 		$this->base_url    = hubspot_forms_base_url();
 		$this->base_action = hubspot_forms_base_action();
 
-		ee()->cp->set_right_nav(array(
-			'module_home'	=> $this->base_url,
-		));
+		// The CP class is not loaded when action methods get called
+		if (isset(ee()->cp))
+		{
+			ee()->cp->set_right_nav(array(
+				'module_home'	=> $this->base_url,
+			));
+		}
 	}
 
 	// ----------------------------------------------------------------
@@ -103,6 +107,17 @@ class Hubspot_forms_mcp {
 	 */
 	public function refresh_forms()
 	{
+		header('Content-Type: application/json');
+
+		if (ee()->session->userdata['can_access_cp'] !== 'y')
+		{
+			$data['success'] = FALSE;
+			$data['error']   = 'Access Denied';
+
+			echo json_encode($data);
+			exit;
+		}
+
 		$f     = new Hubspot_forms_forms();
 		$forms = $f->list_forms(TRUE);
 

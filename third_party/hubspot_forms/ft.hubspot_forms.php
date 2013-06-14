@@ -84,7 +84,7 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 			$form_names[$form->guid] = $form->name;
 		}
 
-		$js_data['action_url'] = hubspot_forms_base_url().AMP.'method=refresh_forms';
+		$js_data['action_url'] = hubspot_forms_action_id_url('Hubspot_forms_mcp', 'refresh_forms');
 
 		// Add CSS and JS
 		ee()->cp->add_to_head("<link rel='stylesheet' type='text/css' href='{$asset_url}chosen/chosen.css'>");

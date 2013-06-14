@@ -4,7 +4,7 @@ if ( ! defined('HUBSPOT_FORMS_NAME'))
 {
 	define('HUBSPOT_FORMS_NAME',    'Hubspot Forms');
 	define('HUBSPOT_FORMS_PACKAGE', 'hubspot_forms');
-	define('HUBSPOT_FORMS_VERSION', '1.0');
+	define('HUBSPOT_FORMS_VERSION', '1.0.1');
 }
 
 /**

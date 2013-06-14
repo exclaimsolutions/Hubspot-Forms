@@ -1,7 +1,7 @@
 $(".hubspot_forms_dropdown").chosen();
 
 $(".hubspot_forms_refresh").on("click", function(){
-	var request = $.get("<?php echo html_entity_decode($action_url) ?>", function(data) {
+	var request = $.get("<?php echo $action_url ?>", function(data) {
 		var $dropdowns = $(".hubspot_forms_dropdown");
 
 		$dropdowns.children().slice(1).remove();
