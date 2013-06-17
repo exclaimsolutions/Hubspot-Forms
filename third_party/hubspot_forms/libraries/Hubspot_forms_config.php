@@ -1,5 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * @package    HubSpot Forms
+ * @license    http://opensource.org/licenses/MIT The MIT License
+ * @author     Joseph Wensley <joseph@exclaimsolutions.com>
+ * @copyright  Copyright (c) 2013 Exclaim Solutions
+ * @link       http://exclaimsolutions.com/
+ */
+
 class Hubspot_forms_config {
 	private static $config = array();
 
