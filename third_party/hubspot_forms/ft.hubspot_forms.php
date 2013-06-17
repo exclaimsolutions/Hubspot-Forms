@@ -130,6 +130,11 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 			return $this->embed_code($form->guid, $config->portal_id, $params);
 		}
 
+		// Sort the fields by the display order
+		usort($form->fields, function($a, $b) {
+			return $a->displayOrder > $b->displayOrder;
+		});
+
 		// -- START : NOT FINISHED --
 		$fields = array();
 		foreach ($form->fields AS $f)
@@ -137,11 +142,13 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 			$field['field:label'] = $f->label;
 			$field['field:name']  = $f->name;
 			$field['field:type']  = $f->fieldType;
+			$field['field:value'] = $f->defaultValue;
 
 			$fields[] = $field;
 		}
 
 		$vars['name']   = $form->name;
+		$vars['submit'] = $form->submitText;
 		$vars['fields'] = $fields;
 
 		$return = form_open();
