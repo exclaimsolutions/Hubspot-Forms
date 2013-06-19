@@ -121,7 +121,7 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 			return $a->displayOrder > $b->displayOrder;
 		});
 
-		$errors = ee()->session->flashdata('validation_errors');
+		$errors = ee()->session->flashdata('form_errors');
 		$values = ee()->session->flashdata('form_values');
 
 		// Build an array of field template tags to parse

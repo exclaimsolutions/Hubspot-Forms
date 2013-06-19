@@ -10,7 +10,12 @@ $lang = array(
 	// Start inserting custom language keys/values here
 	'no_key_portal_id' => 'You must set an API Key and Portal ID',
 	'select_form'      => '-- Select a Form --',
-	'refresh_forms'    => 'Refresh Form List'
+	'refresh_forms'    => 'Refresh Form List',
+
+	// Errors
+	'invalid_guid'  => 'The GUID of the form  you submitted was not valid',
+	'server_error'  => 'A server error has occured, please try again later',
+	'unknown_error' => 'An unknown error has occured, please try again later',
 );
 
 /* End of file lang.hubspot_forms.php */

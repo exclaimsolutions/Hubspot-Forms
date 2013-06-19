@@ -26,7 +26,7 @@ class Hubspot_forms {
 	 */
 	public function __construct()
 	{
-		$this->EE =& get_instance();
+		ee()->lang->loadfile('hubspot_forms');
 	}
 
 	// ----------------------------------------------------------------
@@ -65,12 +65,35 @@ class Hubspot_forms {
 
 		if ($this->validate_submission($data, $form->fields))
 		{
-			$api->submit_form($portal_id, $guid.'111', $data, $context);
+			$api->submit_form($portal_id, $guid, $data, $context);
+
+			// If status is not 204 it means there is an error
+			if ($api->getLastStatus() != 204)
+			{
+				switch ($api->getLastStatus()) {
+					case 404:
+						$errors[] = lang('invalid_guid');
+						break;
+
+					case 500:
+						$errors[] = lang('server_error');
+						break;
+
+					default:
+						$errors[] = lang('unknown_error');
+						break;
+				}
+
+				ee()->session->set_flashdata('form_values', $data);
+				ee()->session->set_flashdata('form_errors', $errors);
+				ee()->functions->redirect(ee()->functions->form_backtrack(2));
+			}
+
 			ee()->functions->redirect($return);
 		}
 
 		ee()->session->set_flashdata('form_values', $data);
-		ee()->session->set_flashdata('validation_errors', $this->validation_errors);
+		ee()->session->set_flashdata('form_errors', $this->form_errors);
 
 		ee()->functions->redirect(ee()->functions->form_backtrack(2));
 	}
@@ -99,7 +122,7 @@ class Hubspot_forms {
 
 		if (count($errors) > 0)
 		{
-			$this->validation_errors = $errors;
+			$this->form_errors = $errors;
 
 			return FALSE;
 		}
