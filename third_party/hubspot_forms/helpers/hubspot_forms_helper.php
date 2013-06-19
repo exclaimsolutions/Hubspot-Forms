@@ -28,6 +28,23 @@ if ( ! function_exists('hubspot_forms_action_id_url'))
 {
 	function hubspot_forms_action_id_url($class, $method)
 	{
-		return ee()->functions->fetch_site_index(0, 0).QUERY_MARKER.'ACT='.ee()->cp->fetch_action_id($class, $method);
+		$action_id = ee()->db->where(array('class' => $class, 'method' => $method))->get('actions')->row('action_id');
+
+		if ( ! $action_id)
+		{
+			return NULL;
+		}
+
+		$index = ee()->functions->fetch_site_index(0, 0);
+
+		if ( ! preg_match('/^(https:|http:)/', $index))
+		{
+			$index = ltrim($index, '/');
+
+			$index = ((empty($_SERVER['HTTPS'])) ? 'http://' : 'https://') . $index;
+		}
+
+
+		return $index.QUERY_MARKER.'ACT='.$action_id;
 	}
 }

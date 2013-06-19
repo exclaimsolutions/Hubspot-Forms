@@ -16,9 +16,12 @@
 * language governing permissions and limitations under the
 * License.
 */
+
+namespace HubSpot;
+
 require_once('class.baseclient.php');
 
-class HubSpot_Forms extends HubSpot_Baseclient{
+class HubSpot_Forms extends \HubSpot_Baseclient{
 
 	protected $API_PATH = 'contacts';
 	protected $API_VERSION = 'v1';
@@ -28,9 +31,9 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 	*
 	*@param portalId: The ID # for your portal
 	*		guid: The unique ID for the form (found in Forms tool in your Hubspot account)
-	*		form_fields: A key-value array of the form fields submitted by the end user. 
-	*					 The key should match the key for the contact property in Hubspot. 
-	*		hs_context: A key-value array of the contextual info for the submission 
+	*		form_fields: A key-value array of the form fields submitted by the end user.
+	*					 The key should match the key for the contact property in Hubspot.
+	*		hs_context: A key-value array of the contextual info for the submission
 	*					This includes: IP address, Page URL, tracking cookie, etc.
 	*
 	*		Note: The fields submitted via the API do not need to match the fields available on the actual form
@@ -42,7 +45,7 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 		try{
 			return json_decode($this->execute_post_request($this->get_forms_request_url($url_base,null),$param_string,TRUE));
 		}
-		catch(HubSpot_Exception $e){
+		catch(\HubSpot_Exception $e){
 			print_r("Unable to submit form: ".$e);
 		}
 
@@ -61,7 +64,7 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 		try{
 			return json_decode($this->execute_get_request($this->get_request_url($endpoint,null)));
 		}
-		catch(HubSpot_Exception $e){
+		catch(\HubSpot_Exception $e){
 			print_r("Unable to retrieve forms: ".$e);
 		}
 	}
@@ -79,17 +82,17 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 		try{
 			return json_decode($this->execute_get_request($this->get_request_url($endpoint,null)));
 		}
-		catch(HubSpot_Exception $e){
+		catch(\HubSpot_Exception $e){
 			print_r("Unable to retrieve form: ".$e);
 		}
 	}
 
 	/**
-	* Create a Form	
+	* Create a Form
 	*
 	*@param form_data: Data in array format for the form being created.
 	*		fields: Array of arrays for fields to be added to the form.
-	*				These arrays will be added to the form_data array, 
+	*				These arrays will be added to the form_data array,
 	*				no need to include a 'fields' entry in the form_data array passed to function
 	*
 	*@return Response body from HTTP POST request
@@ -103,18 +106,18 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 		try{
 			return json_decode($this->execute_JSON_post_request($this->get_request_url($endpoint,null),json_encode($form_data)));
 		}
-		catch(HubSpot_Exception $e){
+		catch(\HubSpot_Exception $e){
 			print_r("Unable to create form: ".$e);
 		}
 	}
 
 	/**
-	* Create a Form	
+	* Create a Form
 	*
 	*@param guid: Unique ID for the form
 	*		form_data: Data in array format for the form being created.
 	*		fields: Array of arrays for fields to be added to the form.
-	*				These arrays will be added to the form_data array, 
+	*				These arrays will be added to the form_data array,
 	*				no need to include a 'fields' entry in the form_data array passed to function
 	*
 	*@return Response body from HTTP POST request
@@ -126,7 +129,7 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 		try{
 			return json_decode($this->execute_JSON_post_request($this->get_request_url($endpoint,null),json_encode($form_data)));
 		}
-		catch(HubSpot_Exception $e){
+		catch(\HubSpot_Exception $e){
 			print_r("Unable to update form: ".$e);
 		}
 	}
@@ -144,7 +147,7 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 		try{
 			return json_decode($this->execute_delete_request($this->get_request_url($endpoint,null),null));
 		}
-		catch(HubSpot_Exception $e){
+		catch(\HubSpot_Exception $e){
 			print_r("Unable to delete form: ".$e);
 		}
 	}
@@ -162,7 +165,7 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 		try{
 			return json_decode($this->execute_get_request($this->get_request_url($endpoint,null)));
 		}
-		catch(HubSpot_Exception $e){
+		catch(\HubSpot_Exception $e){
 			print_r("Unable to retrieve fields: ".$e);
 		}
 	}
@@ -181,7 +184,7 @@ class HubSpot_Forms extends HubSpot_Baseclient{
 		try{
 			return json_decode($this->execute_get_request($this->get_request_url($endpoint,null)));
 		}
-		catch(HubSpot_Exception $e){
+		catch(\HubSpot_Exception $e){
 			print_r("Unable to retrieve field: ".$e);
 		}
 	}

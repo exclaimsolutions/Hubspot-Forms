@@ -35,7 +35,7 @@ class Hubspot_forms_mcp {
 		if (isset(ee()->cp))
 		{
 			ee()->cp->set_right_nav(array(
-				'module_home'	=> $this->base_url,
+				'module_home'   => $this->base_url,
 			));
 		}
 	}
@@ -45,7 +45,7 @@ class Hubspot_forms_mcp {
 	/**
 	 * Index Function
 	 *
-	 * @return 	void
+	 * @return  void
 	 */
 	public function index()
 	{
@@ -95,6 +95,8 @@ class Hubspot_forms_mcp {
 	{
 		header('Content-Type: application/json');
 
+		// Make sure the user has access to the CP. We may not
+		// want people to be able to get a list of all the forms
 		if (ee()->session->userdata['can_access_cp'] !== 'y')
 		{
 			$data['success'] = FALSE;

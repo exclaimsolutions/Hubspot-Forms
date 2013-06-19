@@ -121,14 +121,26 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 			return $a->displayOrder > $b->displayOrder;
 		});
 
-		// -- START : NOT FINISHED --
 		$fields = array();
 		foreach ($form->fields AS $f)
 		{
-			$field['field:label'] = $f->label;
-			$field['field:name']  = $f->name;
-			$field['field:type']  = $f->fieldType;
-			$field['field:value'] = $f->defaultValue;
+			$field['field:label']      = $f->label;
+			$field['field:name']       = $f->name;
+			$field['field:type']       = $f->fieldType;
+			$field['field:value']      = $f->defaultValue;
+			$field['field:required']   = $f->required;
+			$field['field:unselected'] = $f->unselectedLabel;
+
+			if (is_array($f->options) AND count($f->options) > 0)
+			{
+				foreach ($f->options AS $option)
+				{
+					$field['field:options'][] = array(
+						'option:label' => $option->label,
+						'option:value' => $option->value
+					);
+				}
+			}
 
 			$fields[] = $field;
 		}
@@ -137,12 +149,14 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 		$vars['submit'] = $form->submitText;
 		$vars['fields'] = $fields;
 
-		$return = form_open();
+		$return = form_open(hubspot_forms_action_id_url('Hubspot_forms', 'submit_form'));
+		$return .= form_hidden('guid', $form->guid);
+		$return .= form_hidden('portal_id', $config->portal_id);
+		$return .= form_hidden('redirectUrl', $params['redirect'] ?: ee()->functions->fetch_current_uri());
 		$return .= ee()->TMPL->parse_variables_row($tagdata, $vars);
 		$return .= form_close();
 
 		return $return;
-		// -- END : NOT FINISHED --
 	}
 
 	// ------------------------------------------------------------------------

@@ -66,7 +66,7 @@ class Hubspot_forms_forms {
 			return 'You must set an API key!';
 		}
 
-		$api = new HubSpot_Forms($config->api_key);
+		$api = new HubSpot\HubSpot_Forms($config->api_key);
 
 		if (isset($forms->status) AND $forms->status == 'error')
 		{
@@ -120,7 +120,7 @@ class Hubspot_forms_forms {
 		// If the form wasn't in the DB or is too old then retrieve it from the API
 		if ( ! $dbform OR $max_age > $age)
 		{
-			$api = new HubSpot_Forms($config->api_key);
+			$api = new HubSpot\HubSpot_Forms($config->api_key);
 
 			$apiform = $api->get_form_by_id($guid, TRUE);
 

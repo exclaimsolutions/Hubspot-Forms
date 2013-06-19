@@ -35,12 +35,23 @@ class Hubspot_forms_upd {
 
 		ee()->db->insert('modules', $mod_data);
 
-		$action = array(
+		// Add an action we can use to refresh the list of forms
+		// from the HubSpot API
+		$refresh_forms_action = array(
 			'class'  => 'Hubspot_forms_mcp',
 			'method' => 'refresh_forms'
 		);
 
-		ee()->db->insert('actions', $action);
+		ee()->db->insert('actions', $refresh_forms_action);
+
+		// Add an action we can use to submit a form when
+		// using the tag pair
+		$submit_form_action = array(
+			'class'  => 'Hubspot_forms',
+			'method' => 'submit_form'
+		);
+
+		ee()->db->insert('actions', $submit_form_action);
 
 		ee()->load->dbforge();
 
@@ -130,6 +141,14 @@ class Hubspot_forms_upd {
 			$this->v101();
 		}
 
+		/**
+		 * Update to 1.0.2
+		 */
+		if (version_compare($current, '1.0.2', '<'))
+		{
+			$this->v102();
+		}
+
 		return TRUE;
 	}
 
@@ -151,6 +170,21 @@ class Hubspot_forms_upd {
 			->update('actions', $new_action);
 	}
 
+	// ------------------------------------------------------------------------
+
+	public function v102()
+	{
+		// Disable the extension since it wasn't being used
+		ee()->db->where('class', 'Hubspot_forms_ext')
+			->delete('extensions');
+
+		$submit_form_action = array(
+			'class'  => 'Hubspot_forms',
+			'method' => 'submit_form'
+		);
+
+		ee()->db->insert('actions', $submit_form_action);
+	}
 
 }
 /* End of file upd.hubspot_forms.php */

@@ -16,6 +16,9 @@
 * language governing permissions and limitations under the
 * License.
 */
+
+require_once('class.exception.php');
+
 class HubSpot_BaseClient {
     // HubSpot_BaseClient class to be extended by specific hapi clients
 
