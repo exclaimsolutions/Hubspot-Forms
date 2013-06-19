@@ -121,23 +121,51 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 			return $a->displayOrder > $b->displayOrder;
 		});
 
+		$errors = ee()->session->flashdata('validation_errors');
+		$values = ee()->session->flashdata('form_values');
+
+		// Build an array of field template tags to parse
 		$fields = array();
 		foreach ($form->fields AS $f)
 		{
 			$field['field:label']      = $f->label;
 			$field['field:name']       = $f->name;
 			$field['field:type']       = $f->fieldType;
-			$field['field:value']      = $f->defaultValue;
+			$field['field:value']      = isset($values[$f->name]) ? $values[$f->name] : $f->defaultValue;
 			$field['field:required']   = $f->required;
 			$field['field:unselected'] = $f->unselectedLabel;
 
+			$field['field:error']  = '';
+			$field['field:errors'] = array();
+
+			// Build array of error template tags to parse
+			if (isset($errors[$f->name]) AND is_array($errors[$f->name]))
+			{
+				$field_errors = $errors[$f->name];
+
+				$field['field:error'] = $field_errors[0];
+
+				$field['field:errors'] = array();
+				foreach ($field_errors AS $error)
+				{
+					$field['field:errors'][] = array(
+						'error' => $error
+					);
+				}
+			}
+
+			// If the field has options build an array of tags
+			// for them
 			if (is_array($f->options) AND count($f->options) > 0)
 			{
 				foreach ($f->options AS $option)
 				{
+					$selected = ($field['field:value'] == $option->value) ? 'selected' : '';
+
 					$field['field:options'][] = array(
-						'option:label' => $option->label,
-						'option:value' => $option->value
+						'option:label'    => $option->label,
+						'option:value'    => $option->value,
+						'option:selected' => $selected
 					);
 				}
 			}
@@ -145,6 +173,22 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 			$fields[] = $field;
 		}
 
+		$vars['errors'] = array();
+
+		// Build array of error tags for the form
+		if (is_array($errors) AND count($errors) > 0)
+		{
+			$flat_errors = $this->array_flatten($errors);
+
+			foreach ($flat_errors AS $error)
+			{
+				$vars['errors'][] = array(
+					'error' => $error
+				);
+			}
+		}
+
+		// Form tags to parse
 		$vars['name']   = $form->name;
 		$vars['submit'] = $form->submitText;
 		$vars['fields'] = $fields;
@@ -152,7 +196,7 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 		$return = form_open(hubspot_forms_action_id_url('Hubspot_forms', 'submit_form'));
 		$return .= form_hidden('guid', $form->guid);
 		$return .= form_hidden('portal_id', $config->portal_id);
-		$return .= form_hidden('redirectUrl', $params['redirect'] ?: ee()->functions->fetch_current_uri());
+		$return .= form_hidden('return', $params['return'] ?: ee()->functions->fetch_current_uri());
 		$return .= ee()->TMPL->parse_variables_row($tagdata, $vars);
 		$return .= form_close();
 
@@ -176,9 +220,9 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 			'formId'   => $guid,
 		);
 
-		if (isset($params['redirect']))
+		if (isset($params['return']))
 		{
-			$options['redirectUrl'] = $params['redirect'];
+			$options['redirectUrl'] = $params['return'];
 		}
 
 		if (isset($params['css']))
@@ -194,6 +238,28 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 	hbspt.forms.create({$json_options});
 </script>
 CODE;
+	}
+
+	// ------------------------------------------------------------------------
+
+	private function array_flatten($array, $return = array())
+	{
+		foreach($array AS $value)
+		{
+			if(is_array($value))
+			{
+				$return = $this->array_flatten($value, $return);
+			}
+			else
+			{
+				if($value)
+				{
+					$return[] = $value;
+				}
+			}
+		}
+
+		return $return;
 	}
 }
 
