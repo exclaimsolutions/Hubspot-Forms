@@ -47,7 +47,7 @@ That will output some JavaScript like below which will render your form.
 {errors}{/errors} - Contains all validation errors for the form  
 {fields}{/fields} - The loop to display the form fields  
 
-**Field Tags**
+**Field Tags**  
 These are used inside the {fields} tag pair  
 {field:label}  
 {field:name}  
@@ -59,7 +59,7 @@ These are used inside the {fields} tag pair
 {field:error_count} - The number of errors for the field  
 {field:errors}{/field:errors} - All the validation errors for a field  
 
-**Errors**
+**Errors**  
 These tags are used inside the {errors} and {field:errors} tag pairs  
 {error} - The error message  
 
