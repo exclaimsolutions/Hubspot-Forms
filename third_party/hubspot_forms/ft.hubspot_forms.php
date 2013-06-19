@@ -225,7 +225,14 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 
 		if (isset($params['return']))
 		{
-			$options['redirectUrl'] = $params['return'];
+			$return = $params['return'];
+
+			if ( ! preg_match('/^(http|\/\/)/', $return))
+			{
+				$return = ee()->functions->create_url($params['return']);
+			}
+
+			$options['redirectUrl'] = $return;
 		}
 
 		if (isset($params['css']))
