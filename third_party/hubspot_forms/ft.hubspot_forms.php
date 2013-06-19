@@ -154,6 +154,8 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 				}
 			}
 
+			$field['field:error_count'] = count($field['field:errors']);
+
 			// If the field has options build an array of tags
 			// for them
 			if (is_array($f->options) AND count($f->options) > 0)
@@ -189,9 +191,10 @@ class Hubspot_forms_ft extends EE_Fieldtype {
 		}
 
 		// Form tags to parse
-		$vars['name']   = $form->name;
-		$vars['submit'] = $form->submitText;
-		$vars['fields'] = $fields;
+		$vars['name']        = $form->name;
+		$vars['submit']      = $form->submitText;
+		$vars['error_count'] = count($vars['errors']);
+		$vars['fields']      = $fields;
 
 		$return = form_open(hubspot_forms_action_id_url('Hubspot_forms', 'submit_form'));
 		$return .= form_hidden('guid', $form->guid);
